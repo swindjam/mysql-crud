@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./mysql-scripts/data.sql:/docker-entrypoint-initdb.d/2.sql
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    networks:
+      - mysql-crud
+
+  nginx:
+    image: nginx:1.23.0
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/films.conf:consistent
+      - ./src:/app/src:delegated
+    ports:
+      - 8080:8080
+    depends_on:
+      - php
+    networks:
+      - mysql-crud
+
+  php:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/:/app/src:delegated
+      - ./vendor:/app/vendor:delegated
+      - ./php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:consistent
+    depends_on:
+      - mysql
+    networks:
+      - mysql-crud
+
+networks:
+  mysql-crud:

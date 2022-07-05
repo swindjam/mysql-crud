@@ -1,0 +1,17 @@
+{
+    "name": "swindjam/solr-api",
+    "type": "project",
+    "authors": [
+        {
+            "name": "James Swindley"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "MySQLCrud\\": "src"
+        }
+    }
+}

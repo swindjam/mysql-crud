@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+
+  init:
+    image: composer:2.3.7
+    volumes:
+      - ./:/app:consistent
+    command: 
+      - composer
+      - init
+
+  install:
+    image: composer:2.3.7
+    volumes:
+      - ./:/app:consistent
+    command:
+      - composer
+      - install
+
+  autoload:
+    image: composer:2.3.7
+    volumes:
+      - ./:/app:consistent
+    command:
+      - composer
+      - dumpautoload
